@@ -25,6 +25,7 @@ export default function createElement(type, props, ...children) {
     }
     return result
   }, [])
+  
   return {
     type,
     // 在props中添加children属性
