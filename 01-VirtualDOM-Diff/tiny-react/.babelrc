@@ -1,0 +1,12 @@
+// 用于把bable编译jsx语法生成的React.createElement转换成 TinyReact.createElement 目的是实现自定义的 TinyReact 取代 React
+{
+  "presets": [
+    "@babel/preset-env",
+    [
+      "@babel/preset-react",
+      {
+        "pragma": "TinyReact.createElement"
+      }
+    ]
+  ]
+}
