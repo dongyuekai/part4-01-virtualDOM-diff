@@ -2,6 +2,7 @@ import TinyReact from './TinyReact'
 
 const root = document.getElementById('root')
 
+// 1.普通的jsx对象
 const jsx = (
   <div className="container">
     <h1>你好 Tiny React</h1>
@@ -20,7 +21,14 @@ const jsx = (
   </div>
 )
 
-// jsx是被bable转换成React.createElement方法后返回的virtualDOM对象
-TinyReact.render(jsx, root)
+// 1、普通的jsx对象
+// jsx是被bable转换成React.createElement方法后返回的virtualDOM对象 普通jsx对象转换成的virtualDOM对象
+// TinyReact.render(jsx, root)
 // jsx代码在执行前会被bable转换成React.createElement方法的调用，React.createElement方法在调用后会返回vitualDom对象
-console.log('jsx--', jsx)
+// console.log('jsx--', jsx)
+
+// 2、组件类型的jsx对象
+function Heart() {
+  return <div>&hearts;</div>
+}
+TinyReact.render(<Heart />, root)
