@@ -1,4 +1,7 @@
 import TinyReact from './TinyReact'
+
+const root = document.getElementById('root')
+
 const jsx = (
   <div className="container">
     <h1>你好 Tiny React</h1>
@@ -16,5 +19,8 @@ const jsx = (
     <input type="text" value="13" />
   </div>
 )
+
+// jsx是被bable转换成React.createElement方法后返回的virtualDOM对象
+TinyReact.render(jsx, root)
 // jsx代码在执行前会被bable转换成React.createElement方法的调用，React.createElement方法在调用后会返回vitualDom对象
 console.log('jsx--', jsx)
