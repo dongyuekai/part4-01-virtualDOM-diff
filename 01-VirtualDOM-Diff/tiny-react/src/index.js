@@ -27,8 +27,11 @@ const jsx = (
 // jsx代码在执行前会被bable转换成React.createElement方法的调用，React.createElement方法在调用后会返回vitualDom对象
 // console.log('jsx--', jsx)
 
-// 2、组件类型的jsx对象
+// 2、函数组件类型的jsx对象
+function Demo() {
+  return <div>Hello</div>
+}
 function Heart() {
-  return <div>&hearts;</div>
+  return <div>&hearts;<Demo /></div>
 }
 TinyReact.render(<Heart />, root)
