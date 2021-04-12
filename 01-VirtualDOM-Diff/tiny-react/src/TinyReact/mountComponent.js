@@ -10,6 +10,9 @@ export default function mountComponent(virtualDOM, container) {
     console.log('函数组件...')
     nextVirtualDOM = buildFunctionComponent(virtualDOM)
     console.log('nextVirtualDOM---', nextVirtualDOM)
+  } else {
+    console.log('类组件...')
+    nextVirtualDOM = buildClassComponent(virtualDOM)
   }
   // 如果函数组件返回的还是一个组件那就重新再递归解析
   if (isFunction(nextVirtualDOM)) {
@@ -20,7 +23,13 @@ export default function mountComponent(virtualDOM, container) {
     mountNativeElement(nextVirtualDOM, container)
   }
 }
-// 得到组件返回的内容
+// 得到函数组件返回的内容
 function buildFunctionComponent(virtualDOM) {
   return virtualDOM.type(virtualDOM.props || {})
+}
+// 得到类组件返回的内容
+function buildClassComponent(virtualDOM) {
+  const component = new virtualDOM.type(virtualDOM.props || {})
+  const nextVirtualDOM = component.render()
+  return nextVirtualDOM
 }
