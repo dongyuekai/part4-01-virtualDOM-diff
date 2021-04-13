@@ -31,5 +31,7 @@ function buildFunctionComponent(virtualDOM) {
 function buildClassComponent(virtualDOM) {
   const component = new virtualDOM.type(virtualDOM.props || {})
   const nextVirtualDOM = component.render()
+  // 将component实例挂载到nextVirtualDOM对象上 便于mountNativeElement通过第一个参数拿到component实例 从而调用setDOM方法
+  nextVirtualDOM.component = component
   return nextVirtualDOM
 }
