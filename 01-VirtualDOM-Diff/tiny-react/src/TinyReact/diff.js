@@ -2,6 +2,7 @@ import mountElement from './mountElement'
 import updateTextNode from './updateTextNode'
 import updateNodeElement from './updateNodeElement'
 import createDOMElement from './createDOMElement'
+import unmountNode from './unmountNode'
 
 export default function diff(virtualDOM, container, oldDOM) {
   // console.log('更新前---virtualDOM---', virtualDOM)
@@ -30,6 +31,17 @@ export default function diff(virtualDOM, container, oldDOM) {
     virtualDOM.children.forEach((child, i) => {
       diff(child, oldDOM, oldDOM.childNodes[i])
     })
+
+    // 删除节点（当旧节点的数量大于新节点的数量是要删除多余的旧节点）
+    let oldChildNodes = oldDOM.childNodes
+    // 判断旧节点的数量
+    if (oldChildNodes.length > virtualDOM.children.length) {
+      // 有节点需要被删除 
+      for (let i = oldChildNodes.length - 1; i > virtualDOM.children.length; i--) {
+        unmountNode(oldChildNodes[i])
+      }
+    }
+    
   } else if (virtualDOM.type !== oldVirtualDOM.type && typeof virtualDOM !== 'function') {
     // 如果两个元素类型不同 就使用virtualDOM生成真实DOM对象 然后替换老的DOM对象
     const newElement = createDOMElement(virtualDOM)
