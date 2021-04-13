@@ -13,5 +13,4 @@ export default function mountElement(virtualDOM, container) {
     // NativeElement(普通jsx对象)
     mountNativeElement(virtualDOM, container)
   }
-
 }

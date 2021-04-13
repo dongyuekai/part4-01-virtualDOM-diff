@@ -11,7 +11,7 @@ export default function createDOMElement(virtualDOM) {
     newElement = document.createElement(virtualDOM.type)
     updateNodeElement(newElement, virtualDOM)
   }
-
+  // 给真实dom上挂一个_virtualDOM的属性 指向virtualDOM
   newElement._virtualDOM = virtualDOM
 
   // 递归创建子节点

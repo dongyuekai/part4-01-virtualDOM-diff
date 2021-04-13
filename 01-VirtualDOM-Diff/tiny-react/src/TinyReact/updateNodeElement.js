@@ -1,4 +1,5 @@
 // 给元素添加属性
+// 真实DOM元素
 export default function updateNodeElement(newElement, virtualDOM) {
   //  获取节点对应的属性对象
   const newProps = virtualDOM.props
