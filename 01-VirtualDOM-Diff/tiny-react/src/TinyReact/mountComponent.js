@@ -5,6 +5,7 @@ import mountNativeElement from './mountNativeElement'
 
 export default function mountComponent(virtualDOM, container, oldDOM) {
   let nextVirtualDOM = null
+  let component = null
   // 判断组件是类组件还是函数组件（原型上有没有render函数）
   if (isFunctionComponent(virtualDOM)) {
     console.log('函数组件...')
@@ -13,7 +14,9 @@ export default function mountComponent(virtualDOM, container, oldDOM) {
   } else {
     console.log('类组件...')
     nextVirtualDOM = buildClassComponent(virtualDOM)
+    component = nextVirtualDOM.component
   }
+
   // 如果函数组件返回的还是一个组件那就重新再递归解析
   if (isFunction(nextVirtualDOM)) {
     console.log('isFunction-----')
@@ -21,6 +24,14 @@ export default function mountComponent(virtualDOM, container, oldDOM) {
   } else {
     console.log('notFunction----')
     mountNativeElement(nextVirtualDOM, container, oldDOM)
+  }
+
+  // 处理ref获取组件的实例
+  if (component) {
+    component.componentDidMount()
+    if (component.props && component.props.ref) {
+      component.props.ref(component)
+    }
   }
 }
 // 得到函数组件返回的内容

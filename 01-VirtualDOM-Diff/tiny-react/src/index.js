@@ -130,7 +130,7 @@ const root = document.getElementById('root')
 // TinyReact.render(<Alert name='张三' age={20} />, root)
 
 
-// 6 组件更新之不是同一个组件的情况
+// 6 组件更新之不是同一个组件和是同一个组件的情况
 
 // function Heart(props) {
 //   return (
@@ -140,57 +140,95 @@ const root = document.getElementById('root')
 //     </div>
 //   )
 // }
-class Heart extends TinyReact.Component {
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <div>
-        {this.props.title}
-      &hearts;
-      </div>
-    )
-  }
-}
+// class Heart extends TinyReact.Component {
+//   constructor(props) {
+//     super(props)
+//   }
+//   render() {
+//     return (
+//       <div>
+//         {this.props.title}
+//       &hearts;
+//       </div>
+//     )
+//   }
+// }
 
 
+// class Alert extends TinyReact.Component {
+//   constructor(props) {
+//     super(props)
+//     this.state = {
+//       title: "Default Title"
+//     }
+//     this.handleClick = this.handleClick.bind(this)
+//   }
+//   handleClick() {
+//     this.setState({ title: "Changed Title" })
+//   }
+//   componentWillReceiveProps(nextProps) {
+//     console.log("componentWillReceiveProps")
+//   }
+//   componentWillUpdate() {
+//     console.log("componentWillUpdate")
+//   }
+//   componentDidUpdate() {
+//     console.log("componentDidUpdate")
+//   }
+//   render() {
+//     return (
+//       <div>
+//         {this.props.name}
+//         {this.props.age}
+//         <div>
+//           {this.state.title}
+//           <button onClick={this.handleClick}>改变Title</button>
+//         </div>
+//       </div>
+//     )
+//   }
+// }
+// TinyReact.render(<Alert name="张三" age={20} />, root)
+
+// setTimeout(() => {
+//   TinyReact.render(<Alert name="李四" age={50} />, root)
+//   // TinyReact.render(<Heart title="我是Heart组件" />, root)
+// }, 2000)
+
+// 7 实现ref属性获取元素DOM对象 获取组件实例对象
 class Alert extends TinyReact.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      title: "Default Title"
-    }
-    this.handleClick = this.handleClick.bind(this)
-  }
-  handleClick() {
-    this.setState({ title: "Changed Title" })
-  }
-  componentWillReceiveProps(nextProps) {
-    console.log("componentWillReceiveProps")
-  }
-  componentWillUpdate() {
-    console.log("componentWillUpdate")
-  }
-  componentDidUpdate() {
-    console.log("componentDidUpdate")
   }
   render() {
     return (
       <div>
         {this.props.name}
         {this.props.age}
-        <div>
-          {this.state.title}
-          <button onClick={this.handleClick}>改变Title</button>
-        </div>
       </div>
     )
   }
 }
-TinyReact.render(<Alert name="张三" age={20} />, root)
-
-setTimeout(() => {
-  TinyReact.render(<Alert name="李四" age={50} />, root)
-  // TinyReact.render(<Heart title="我是Heart组件" />, root)
-}, 2000)
+class DemoRef extends TinyReact.Component {
+  constructor(props) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+  }
+  handleClick() {
+    console.log(this.input.value)
+    console.log(this.alert)
+  }
+  componentDidMount() {
+    console.log('componentDidMount---')
+  }
+  render() {
+    return (
+      <div>
+        <input type='text' ref={input => this.input = input} />
+        <button onClick={this.handleClick}>按钮</button>
+        <Alert name='zhangsan' age='20' ref={alert => this.alert = alert} />
+      </div>
+    )
+  }
+}
+TinyReact.render(<DemoRef />, root)

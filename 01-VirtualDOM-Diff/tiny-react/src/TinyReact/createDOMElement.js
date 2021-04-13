@@ -1,3 +1,4 @@
+// 创建DOM元素
 import mountElement from "./mountElement"
 import updateNodeElement from "./updateNodeElement"
 
@@ -19,6 +20,7 @@ export default function createDOMElement(virtualDOM) {
     mountElement(child, newElement)
   })
 
+  // 处理ref获取元素DOM对象
   if (virtualDOM.props && virtualDOM.props.ref) {
     virtualDOM.props.ref(newElement)
   }
