@@ -1,6 +1,7 @@
 import mountElement from './mountElement'
 import updateTextNode from './updateTextNode'
 import updateNodeElement from './updateNodeElement'
+import createDOMElement from './createDOMElement'
 
 export default function diff(virtualDOM, container, oldDOM) {
   // console.log('更新前---virtualDOM---', virtualDOM)
@@ -29,5 +30,9 @@ export default function diff(virtualDOM, container, oldDOM) {
     virtualDOM.children.forEach((child, i) => {
       diff(child, oldDOM, oldDOM.childNodes[i])
     })
+  } else if (virtualDOM.type !== oldVirtualDOM.type && typeof virtualDOM !== 'function') {
+    // 如果两个元素类型不同 就使用virtualDOM生成真实DOM对象 然后替换老的DOM对象
+    const newElement = createDOMElement(virtualDOM)
+    oldDOM.parentNode.replaceChild(newElement, oldDOM)
   }
 }
