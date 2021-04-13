@@ -191,6 +191,6 @@ class Alert extends TinyReact.Component {
 TinyReact.render(<Alert name="张三" age={20} />, root)
 
 setTimeout(() => {
-  // TinyReact.render(<Alert name="李四" age={50} />, root)
-  TinyReact.render(<Heart title="我是Heart组件" />, root)
+  TinyReact.render(<Alert name="李四" age={50} />, root)
+  // TinyReact.render(<Heart title="我是Heart组件" />, root)
 }, 2000)
