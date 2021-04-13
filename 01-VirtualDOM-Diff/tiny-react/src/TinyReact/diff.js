@@ -1,5 +1,6 @@
 import mountElement from './mountElement'
 import updateTextNode from './updateTextNode'
+import updateNodeElement from './updateNodeElement'
 
 export default function diff(virtualDOM, container, oldDOM) {
   // console.log('更新前---virtualDOM---', virtualDOM)
@@ -11,6 +12,7 @@ export default function diff(virtualDOM, container, oldDOM) {
     mountElement(virtualDOM, container)
   } else if (oldVirtualDOM && virtualDOM.type === oldVirtualDOM.type) {
     // 如果两个元素类型相同（比如都是div 都是button等）
+    // 更新文本节点内容
     if (virtualDOM.type === 'text') {
       // 更新内容 找差异 然后更新oldDOM
 
@@ -20,8 +22,8 @@ export default function diff(virtualDOM, container, oldDOM) {
 
       updateTextNode(virtualDOM, oldVirtualDOM, oldDOM)
     } else {
-      // 更新元素属性
-
+      // 更新元素节点属性
+      updateNodeElement(oldDOM, virtualDOM, oldVirtualDOM)
     }
     // 循环子元素
     virtualDOM.children.forEach((child, i) => {
