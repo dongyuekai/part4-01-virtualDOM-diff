@@ -23,7 +23,7 @@ const root = document.getElementById('root')
 
 // jsx代码在执行前babel配置项会默认调用React.createElement方法将当前jsx对象返回virtualDOM对象
 // 普通jsx对象转换成virtualDOM对象
-// TinyReact.render(jsx, root)
+// TinyReact.render(jsx, root)  TinyReact.render函数把虚拟dom转换成真实的dom
 // console.log('jsx--', jsx)
 
 // 2、函数组件类型的jsx对象渲染
@@ -281,4 +281,5 @@ class KeyDemo extends TinyReact.Component {
     )
   }
 }
+// TinyReact.render函数把虚拟dom转换成真实的dom
 TinyReact.render(<KeyDemo />, root)
