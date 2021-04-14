@@ -1,9 +1,22 @@
 import { createTaskQueue } from '../Misc'
 
 const taskQueue = createTaskQueue()
-const subTask = null
+let subTask = null
 
-const getFirstTask = () => { }
+// 构建根节点的Fiber对象
+const getFirstTask = () => {
+  // 从任务队列中获取第一个子任务
+  const task = taskQueue.pop()
+  console.log('firstTask---', task)
+  // 返回最外层节点的fiber对象
+  return {
+    props: task.props,
+    stateNode: task.dom,
+    tag: 'host_root',
+    effects: [],
+    child: null
+  }
+}
 const executeTask = fiber => {
   
 }
@@ -12,6 +25,7 @@ const workLoop = deadline => {
 
   // 如果子任务不存在 就去获取子任务
   if (!subTask) {
+    // subTask是根节点的Fiber对象
     subTask = getFirstTask()
   }
 
