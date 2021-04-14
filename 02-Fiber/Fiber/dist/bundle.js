@@ -90,10 +90,175 @@
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-console.log('from client js');
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./react */ "./src/react/index.js");
+// 利用Fiber算法实现将jsx对象 转换成真实dom 显示在页面中
+
+var root = document.getElementById("root");
+var jsx = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello React"));
+Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])(jsx, root);
+
+/***/ }),
+
+/***/ "./src/react/CreateElement/index.js":
+/*!******************************************!*\
+  !*** ./src/react/CreateElement/index.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return createElement; });
+// createElement方法将当前jsx对象返回virtualDOM对象
+function createElement(type, props) {
+  var _ref;
+
+  for (var _len = arguments.length, children = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    children[_key - 2] = arguments[_key];
+  }
+
+  var childElements = (_ref = []).concat.apply(_ref, children).reduce(function (result, child) {
+    if (child !== false && child !== true && child !== null) {
+      if (child instanceof Object) {
+        result.push(child);
+      } else {
+        result.push(createElement("text", {
+          textContent: child
+        }));
+      }
+    }
+
+    return result;
+  }, []);
+
+  return {
+    type: type,
+    props: Object.assign({
+      children: childElements
+    }, props)
+  };
+}
+
+/***/ }),
+
+/***/ "./src/react/Misc/CreateTaskQueue/index.js":
+/*!*************************************************!*\
+  !*** ./src/react/Misc/CreateTaskQueue/index.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var createTeskQueue = function createTeskQueue() {
+  var taskQueue = [];
+  return {
+    // 先进先出
+    push: function push(item) {
+      return taskQueue.push(item);
+    },
+    pop: function pop() {
+      return taskQueue.shift();
+    }
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (createTeskQueue);
+
+/***/ }),
+
+/***/ "./src/react/Misc/index.js":
+/*!*********************************!*\
+  !*** ./src/react/Misc/index.js ***!
+  \*********************************/
+/*! exports provided: createTaskQueue */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CreateTaskQueue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateTaskQueue */ "./src/react/Misc/CreateTaskQueue/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createTaskQueue", function() { return _CreateTaskQueue__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+
+
+/***/ }),
+
+/***/ "./src/react/index.js":
+/*!****************************!*\
+  !*** ./src/react/index.js ***!
+  \****************************/
+/*! exports provided: render, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CreateElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateElement */ "./src/react/CreateElement/index.js");
+/* harmony import */ var _reconciliation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reconciliation */ "./src/react/reconciliation/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _reconciliation__WEBPACK_IMPORTED_MODULE_1__["render"]; });
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  createElement: _CreateElement__WEBPACK_IMPORTED_MODULE_0__["default"]
+});
+
+/***/ }),
+
+/***/ "./src/react/reconciliation/index.js":
+/*!*******************************************!*\
+  !*** ./src/react/reconciliation/index.js ***!
+  \*******************************************/
+/*! exports provided: render */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony import */ var _Misc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Misc */ "./src/react/Misc/index.js");
+function _readOnlyError(name) { throw new TypeError("\"" + name + "\" is read-only"); }
+
+
+var taskQueue = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["createTaskQueue"])();
+var subTask = null;
+
+var workLoop = function workLoop(deadline) {
+  if (!subTask) {
+    subTask = (_readOnlyError("subTask"), getFirstTask);
+  }
+};
+
+var performTask = function performTask(deadline) {
+  workLoop(deadline);
+};
+
+var render = function render(element, dom) {
+  console.log('element----', element);
+  console.log('dom----', dom); // root
+
+  /**
+   * 1、向任务队列中添加任务
+   * 2、指定在浏览器空闲时执行任务
+   */
+
+  /**
+   * 任务就是通过 vdom 对象 构建 fiber对象
+   */
+
+  taskQueue.push({
+    dom: dom,
+    props: {
+      children: element
+    }
+  }); // console.log(taskQueue.pop())
+  // 调用 requestIdleCallback api
+
+  requestIdleCallback(performTask);
+};
 
 /***/ })
 
