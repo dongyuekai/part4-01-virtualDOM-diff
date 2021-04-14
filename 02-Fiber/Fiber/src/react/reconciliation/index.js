@@ -1,4 +1,4 @@
-import { createTaskQueue } from '../Misc'
+import { createTaskQueue, arrified, createStateNode, getTag } from '../Misc'
 
 const taskQueue = createTaskQueue()
 let subTask = null
@@ -17,8 +17,52 @@ const getFirstTask = () => {
     child: null
   }
 }
+const reconcileChildren = (fiber, children) => {
+  // children可能是对象 也可能是数组
+  // 需要将children转换成数组
+  // console.log('before--', children)
+  const arrifiedChildren = arrified(children)
+  // console.log('after---', arrifiedChildren)
+
+  let index = 0
+  let numberOfElements = arrifiedChildren.length
+  let element = null
+  let newFiber = null
+  let prevFiber = null
+
+  while (index < numberOfElements) {
+    element = arrifiedChildren[index]
+    // console.log('element--', element)
+    newFiber = {
+      type: element.type,
+      props: element.props,
+      tag: getTag(element), // 普通节点
+      effects: [],
+      effectTag: 'placement',
+      parent: fiber
+    }
+
+    newFiber.stateNode = createStateNode(newFiber)
+
+    // fiber遍历的规则 如果是第一个节点 就是子节点 不是第一个子节点就是下一个兄弟节点
+    if (index === 0) {
+      fiber.child = newFiber
+    } else {
+      prevFiber.sibling = newFiber
+    }
+
+    // 保存上一个Fiber节点
+    prevFiber = newFiber
+
+    index++
+  }
+
+}
+// fiber参数就是根节点fiber对象
 const executeTask = fiber => {
-  
+  // 第一个参数为根节点的fiber 第二个参数为子节点的virtualDOM对象
+  reconcileChildren(fiber, fiber.props.children)
+  console.log('构建子节点后fiber---', fiber)
 }
 
 const workLoop = deadline => {
@@ -47,9 +91,10 @@ const performTask = deadline => {
   }
 }
 
+// element为babel通过createElement转移后的virtualDOM对象 dom为root节点
 export const render = (element, dom) => {
-  console.log('element----', element)
-  console.log('dom----', dom) // root
+  // console.log('element----', element)
+  // console.log('dom----', dom) // root
 
   /**
    * 1、向任务队列中添加任务
