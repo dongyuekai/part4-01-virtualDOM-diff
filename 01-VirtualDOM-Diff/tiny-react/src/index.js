@@ -196,39 +196,88 @@ const root = document.getElementById('root')
 // }, 2000)
 
 // 7 实现ref属性获取元素DOM对象 获取组件实例对象
-class Alert extends TinyReact.Component {
+// class Alert extends TinyReact.Component {
+//   constructor(props) {
+//     super(props)
+//   }
+//   render() {
+//     return (
+//       <div>
+//         {this.props.name}
+//         {this.props.age}
+//       </div>
+//     )
+//   }
+// }
+// class DemoRef extends TinyReact.Component {
+//   constructor(props) {
+//     super(props)
+//     this.handleClick = this.handleClick.bind(this)
+//   }
+//   handleClick() {
+//     console.log(this.input.value)
+//     console.log(this.alert)
+//   }
+//   componentDidMount() {
+//     console.log('componentDidMount---')
+//   }
+//   render() {
+//     return (
+//       <div>
+//         <input type='text' ref={input => this.input = input} />
+//         <button onClick={this.handleClick}>按钮</button>
+//         <Alert name='zhangsan' age='20' ref={alert => this.alert = alert} />
+//       </div>
+//     )
+//   }
+// }
+// TinyReact.render(<DemoRef />, root)
+
+// 8 测试key属性的作用
+class KeyDemo extends TinyReact.Component {
   constructor(props) {
     super(props)
-  }
-  render() {
-    return (
-      <div>
-        {this.props.name}
-        {this.props.age}
-      </div>
-    )
-  }
-}
-class DemoRef extends TinyReact.Component {
-  constructor(props) {
-    super(props)
+    this.state = {
+      persons: [
+        {
+          id: 1,
+          name: "张三"
+        },
+        {
+          id: 2,
+          name: "李四"
+        },
+        {
+          id: 3,
+          name: "王五"
+        },
+        {
+          id: 4,
+          name: "赵六"
+        }
+      ]
+    }
     this.handleClick = this.handleClick.bind(this)
   }
   handleClick() {
-    console.log(this.input.value)
-    console.log(this.alert)
-  }
-  componentDidMount() {
-    console.log('componentDidMount---')
+    const newState = JSON.parse(JSON.stringify(this.state))
+    // newState.persons.push(newState.persons.shift())
+    newState.persons.splice(1, 0, { id: 100, name: 'dyk' })
+    this.setState(newState)
   }
   render() {
     return (
       <div>
-        <input type='text' ref={input => this.input = input} />
+        <ul>
+          {
+            this.state.persons.map(person => (
+              <li key={person.id}>{person.name}</li>
+            ))
+          }
+        </ul>
         <button onClick={this.handleClick}>按钮</button>
-        <Alert name='zhangsan' age='20' ref={alert => this.alert = alert} />
       </div>
     )
   }
 }
-TinyReact.render(<DemoRef />, root)
+TinyReact.render(<KeyDemo />, root)
