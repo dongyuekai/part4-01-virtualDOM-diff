@@ -81,11 +81,28 @@ export default function diff(virtualDOM, container, oldDOM) {
     let oldChildNodes = oldDOM.childNodes
     // 判断旧节点的数量
     if (oldChildNodes.length > virtualDOM.children.length) {
-      // 有节点需要被删除 
-      for (let i = oldChildNodes.length - 1; i > virtualDOM.children.length; i--) {
-        unmountNode(oldChildNodes[i])
+      // 老节点的数量大于新节点的 说明需要删除老节点的节点
+      if (hasNoKey) {
+        // 如果没有key 没有key通过索引方式来删除
+        for (let i = oldChildNodes.length - 1; i > virtualDOM.children.length; i--) {
+          unmountNode(oldChildNodes[i])
+        }
+      } else {
+        // 有key 通过key属性删除节点
+        for (let i = 0; i < oldChildNodes.length; i++) {
+          let oldChild = oldChildNodes[i]
+          let oldChildKey = oldChild._virtualDOM.props.key
+          let found = false
+          for (let n = 0; n < virtualDOM.children.length; n++) {
+            if (oldChildKey === virtualDOM.children[n].props.key) {
+              found = true
+            }
+          }
+          if (!found) {
+            unmountNode(oldChild)
+          }
+        }
       }
     }
-
   }
 }
