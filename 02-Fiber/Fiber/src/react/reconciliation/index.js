@@ -7,7 +7,7 @@ let subTask = null
 const getFirstTask = () => {
   // 从任务队列中获取第一个子任务
   const task = taskQueue.pop()
-  console.log('firstTask---', task)
+  // console.log('firstTask---', task)
   // 返回最外层节点的fiber对象
   return {
     props: task.props,
@@ -62,7 +62,11 @@ const reconcileChildren = (fiber, children) => {
 const executeTask = fiber => {
   // 第一个参数为根节点的fiber 第二个参数为子节点的virtualDOM对象
   reconcileChildren(fiber, fiber.props.children)
-  console.log('构建子节点后fiber---', fiber)
+  // console.log('构建子节点后fiber---', fiber)
+  if (fiber.child) {
+    return fiber.child
+  }
+  console.log(fiber)
 }
 
 const workLoop = deadline => {
