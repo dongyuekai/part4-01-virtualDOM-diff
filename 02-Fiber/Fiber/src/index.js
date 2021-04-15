@@ -40,18 +40,57 @@ const root = document.getElementById("root")
 // render(<FnComponent title="hello" />, root)
 
 // 实现更新节点
-const jsx = (
-  <div>
-    <p>Hello React</p>
-    <p>Hi Fiber</p>
-  </div>
-)
-render(jsx, root)
-setTimeout(() => {
-  const jsx = (
-    <div>
-      <p>Hi Fiber</p>
-    </div>
-  )
-  render(jsx, root)
-}, 2000);
+// const jsx = (
+//   <div>
+//     <p>Hello React</p>
+//     <p>Hi Fiber</p>
+//   </div>
+// )
+// render(jsx, root)
+// setTimeout(() => {
+//   const jsx = (
+//     <div>
+//       <div>Hello React</div>
+//       <p>Hi Fiber</p>
+//     </div>
+//   )
+//   render(jsx, root)
+// }, 2000);
+
+// // 实现删除节点
+// const jsx = (
+//   <div>
+//     <p>Hello React</p>
+//     <p>Hi Fiber</p>
+//   </div>
+// )
+// render(jsx, root)
+// setTimeout(() => {
+//   const jsx = (
+//     <div>
+//       <p>Hi Fiber</p>
+//     </div>
+//   )
+//   render(jsx, root)
+// }, 2000);
+
+
+// 实现类组件状态更新功能
+class Greating extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      name: 'zhangsan'
+    }
+  }
+  render() {
+    return (
+      <div>
+        {this.state.name}
+        123344443
+        <button onClick={() => { this.setState({ name: 'lisi' }) }}>更新state</button>
+      </div>
+    )
+  }
+}
+render(<Greating title='aoligei' />, root)

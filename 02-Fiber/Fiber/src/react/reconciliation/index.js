@@ -1,5 +1,5 @@
 import { updateNodeElement } from '../DOM'
-import { createTaskQueue, arrified, createStateNode, getTag } from '../Misc'
+import { createTaskQueue, arrified, createStateNode, getTag, getRoot } from '../Misc'
 
 // 任务队列
 const taskQueue = createTaskQueue()
@@ -15,6 +15,9 @@ let pendingCommit = null
 const commitAllWork = fiber => {
   // console.log(fiber)
   fiber.effects.forEach(item => {
+    if (item.tag === 'class_component') {
+      item.stateNode.__fiber = item
+    }
     // 追加操作
     if (item.effectTag === 'placement') {
       let fiber = item
@@ -56,6 +59,22 @@ const commitAllWork = fiber => {
 const getFirstTask = () => {
   // 从任务队列中获取第一个子任务
   const task = taskQueue.pop()
+
+  if (task.from === 'class_component') {
+    // 组件状态更新任务
+    const root = getRoot(task.instance)
+    // console.log('root---', root)
+    task.instance.__fiber.partialState = task.partialState
+    // 返回root节点的fiber对象
+    return {
+      props: root.props,
+      stateNode: root.stateNode,
+      tag: 'host_root',
+      effects: [],
+      child: null,
+      alternate: root
+    }
+  }
   // console.log('firstTask---', task)
   // 返回最外层节点的fiber对象
   return {
@@ -160,6 +179,14 @@ const executeTask = fiber => {
   // 第一个参数为根节点的fiber 第二个参数为子节点的virtualDOM对象
 
   if (fiber.tag === 'class_component') {
+
+    // setState更新
+    if (fiber.stateNode.__fiber && fiber.stateNode.__fiber.partialState) {
+      fiber.stateNode.state = {
+        ...fiber.stateNode.state,
+        ...fiber.stateNode.__fiber.partialState
+      }
+    }
     // 如果是类组件 fiber.stateNode.render() 返回子元素
     reconcileChildren(fiber, fiber.stateNode.render())
   } else if (fiber.tag === 'function_component') {
@@ -201,10 +228,11 @@ const workLoop = deadline => {
 
   // 如果任务存在 并且浏览器空闲 就调用executeTask 方法执行任务 并接受任务 返回新任务
   while (subTask && deadline.timeRemaining() > 1) {
-    // 如果任务存在 并且浏览器空闲
+    // 如果任务存在 并且浏览器空闲 构建fiber
     subTask = executeTask(subTask)
   }
   if (pendingCommit) {
+    // 最终根据fiber渲染dom
     commitAllWork(pendingCommit)
   }
 }
@@ -245,4 +273,14 @@ export const render = (element, dom) => {
   // 在浏览器有空余时间就执行performTask
   requestIdleCallback(performTask)
 
+}
+
+export const scheduleUpdate = (instance, partialState) => {
+  taskQueue.push({
+    from: 'class_component',
+    instance,
+    partialState
+  })
+  // 浏览器空闲的时候执行任务
+  requestIdleCallback(performTask)
 }
