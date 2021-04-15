@@ -13,16 +13,28 @@ const root = document.getElementById("root")
 
 
 // 类组件
-class Greating extends Component {
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    return (
-      <div>
-        123344443
-      </div>
-    )
-  }
+// class Greating extends Component {
+//   constructor(props) {
+//     super(props)
+//   }
+//   render() {
+//     return (
+//       <div>
+//         {this.props.name}
+//         123344443
+//       </div>
+//     )
+//   }
+// }
+// render(<Greating name='dyk'/>, root)
+
+// 函数组件
+function FnComponent(props) {
+  return (
+    <div>
+      {props.title}
+      FnComponent
+    </div>
+  )
 }
-render(<Greating />, root)
+render(<FnComponent title="hello" />, root)

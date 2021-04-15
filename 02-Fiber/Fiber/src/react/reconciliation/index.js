@@ -17,10 +17,11 @@ const commitAllWork = fiber => {
       let fiber = item
       let parentFiber = item.parent
 
-      // 如果是类组件 就把 parentFiber 赋值为 parentFiber.parent
-      while (parentFiber.tag === 'class_component') {
+      // 如果是类组件或者函数组件 就把 parentFiber 赋值为 parentFiber.parent
+      while (parentFiber.tag === 'class_component' || parentFiber.tag === 'function_component') {
         parentFiber = parentFiber.parent
       }
+
       // 最终要进行普通节点渲染
       if (fiber.tag === 'host_component') {
         parentFiber.stateNode.appendChild(fiber.stateNode)
@@ -69,7 +70,7 @@ const reconcileChildren = (fiber, children) => {
 
     newFiber.stateNode = createStateNode(newFiber)
 
-    console.log(newFiber)
+    console.log('newFiber-----', newFiber)
 
     // fiber遍历的规则 如果是第一个节点 就是子节点 不是第一个子节点就是下一个兄弟节点
     if (index === 0) {
@@ -93,6 +94,8 @@ const executeTask = fiber => {
   if (fiber.tag === 'class_component') {
     // 如果是类组件 fiber.stateNode.render() 返回子元素
     reconcileChildren(fiber, fiber.stateNode.render())
+  } else if (fiber.tag === 'function_component') {
+    reconcileChildren(fiber, fiber.stateNode(fiber.props))
   } else {
     reconcileChildren(fiber, fiber.props.children)
   }

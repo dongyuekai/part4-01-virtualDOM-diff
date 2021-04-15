@@ -96,28 +96,6 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./react */ "./src/react/index.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 // 利用Fiber算法实现将jsx对象 转换成真实dom 显示在页面中
 
 var root = document.getElementById("root"); // jsx对象
@@ -129,29 +107,29 @@ var root = document.getElementById("root"); // jsx对象
 // )
 // render(jsx, root)
 // 类组件
+// class Greating extends Component {
+//   constructor(props) {
+//     super(props)
+//   }
+//   render() {
+//     return (
+//       <div>
+//         {this.props.name}
+//         123344443
+//       </div>
+//     )
+//   }
+// }
+// render(<Greating name='dyk'/>, root)
+// 函数组件
 
-var Greating = /*#__PURE__*/function (_Component) {
-  _inherits(Greating, _Component);
+function FnComponent(props) {
+  return /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, props.title, "FnComponent");
+}
 
-  var _super = _createSuper(Greating);
-
-  function Greating(props) {
-    _classCallCheck(this, Greating);
-
-    return _super.call(this, props);
-  }
-
-  _createClass(Greating, [{
-    key: "render",
-    value: function render() {
-      return /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "123344443");
-    }
-  }]);
-
-  return Greating;
-}(_react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])( /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement(Greating, null), root);
+Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])( /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement(FnComponent, {
+  title: "hello"
+}), root);
 
 /***/ }),
 
@@ -537,9 +515,9 @@ var commitAllWork = function commitAllWork(fiber) {
   fiber.effects.forEach(function (item) {
     if (item.effectTag === 'placement') {
       var _fiber = item;
-      var parentFiber = item.parent; // 如果是类组件 就把 parentFiber 赋值为 parentFiber.parent
+      var parentFiber = item.parent; // 如果是类组件或者函数组件 就把 parentFiber 赋值为 parentFiber.parent
 
-      while (parentFiber.tag === 'class_component') {
+      while (parentFiber.tag === 'class_component' || parentFiber.tag === 'function_component') {
         parentFiber = parentFiber.parent;
       } // 最终要进行普通节点渲染
 
@@ -591,7 +569,7 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
       parent: fiber
     };
     newFiber.stateNode = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["createStateNode"])(newFiber);
-    console.log(newFiber); // fiber遍历的规则 如果是第一个节点 就是子节点 不是第一个子节点就是下一个兄弟节点
+    console.log('newFiber-----', newFiber); // fiber遍历的规则 如果是第一个节点 就是子节点 不是第一个子节点就是下一个兄弟节点
 
     if (index === 0) {
       fiber.child = newFiber;
@@ -612,6 +590,8 @@ var executeTask = function executeTask(fiber) {
   if (fiber.tag === 'class_component') {
     // 如果是类组件 fiber.stateNode.render() 返回子元素
     reconcileChildren(fiber, fiber.stateNode.render());
+  } else if (fiber.tag === 'function_component') {
+    reconcileChildren(fiber, fiber.stateNode(fiber.props));
   } else {
     reconcileChildren(fiber, fiber.props.children);
   } // console.log('构建子节点后fiber---', fiber)
