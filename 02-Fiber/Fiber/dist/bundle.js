@@ -96,11 +96,62 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./react */ "./src/react/index.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 // 利用Fiber算法实现将jsx对象 转换成真实dom 显示在页面中
 
-var root = document.getElementById("root");
-var jsx = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello React"), /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hi React"));
-Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])(jsx, root);
+var root = document.getElementById("root"); // jsx对象
+// const jsx = (
+//   <div>
+//     <p>Hello React</p>
+//     <p>Hi React</p>
+//   </div>
+// )
+// render(jsx, root)
+// 类组件
+
+var Greating = /*#__PURE__*/function (_Component) {
+  _inherits(Greating, _Component);
+
+  var _super = _createSuper(Greating);
+
+  function Greating(props) {
+    _classCallCheck(this, Greating);
+
+    return _super.call(this, props);
+  }
+
+  _createClass(Greating, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "123344443");
+    }
+  }]);
+
+  return Greating;
+}(_react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])( /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement(Greating, null), root);
 
 /***/ }),
 
@@ -118,6 +169,26 @@ var arrified = function arrified(arg) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (arrified);
+
+/***/ }),
+
+/***/ "./src/react/Component/index.js":
+/*!**************************************!*\
+  !*** ./src/react/Component/index.js ***!
+  \**************************************/
+/*! exports provided: Component */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return Component; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Component = function Component(props) {
+  _classCallCheck(this, Component);
+
+  this.props = props;
+};
 
 /***/ }),
 
@@ -309,6 +380,31 @@ var createTeskQueue = function createTeskQueue() {
 
 /***/ }),
 
+/***/ "./src/react/Misc/createReactInstance/index.js":
+/*!*****************************************************!*\
+  !*** ./src/react/Misc/createReactInstance/index.js ***!
+  \*****************************************************/
+/*! exports provided: createReactInstance */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createReactInstance", function() { return createReactInstance; });
+var createReactInstance = function createReactInstance(fiber) {
+  var instance = null;
+
+  if (fiber.tag == 'class_component') {
+    // 如果是类组件 那么fiber.type就是组件的构造函数
+    instance = new fiber.type(fiber.props);
+  } else {
+    instance = fiber.type;
+  }
+
+  return instance;
+};
+
+/***/ }),
+
 /***/ "./src/react/Misc/createStateNode.js/index.js":
 /*!****************************************************!*\
   !*** ./src/react/Misc/createStateNode.js/index.js ***!
@@ -319,11 +415,15 @@ var createTeskQueue = function createTeskQueue() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DOM__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../DOM */ "./src/react/DOM/index.js");
+/* harmony import */ var _createReactInstance__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../createReactInstance */ "./src/react/Misc/createReactInstance/index.js");
+
 
 
 var createStateNode = function createStateNode(fiber) {
   if (fiber.tag === 'host_component') {
     return Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["createDOMElement"])(fiber);
+  } else {
+    return Object(_createReactInstance__WEBPACK_IMPORTED_MODULE_1__["createReactInstance"])(fiber);
   }
 };
 
@@ -340,9 +440,19 @@ var createStateNode = function createStateNode(fiber) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Component */ "./src/react/Component/index.js");
+
+
 var getTag = function getTag(vdom) {
   if (typeof vdom.type === 'string') {
+    // 普通jsx
     return 'host_component';
+  } else if (Object.getPrototypeOf(vdom.type) === _Component__WEBPACK_IMPORTED_MODULE_0__["Component"]) {
+    // 类组件
+    return 'class_component';
+  } else {
+    // 函数组件
+    return 'function_component';
   }
 };
 
@@ -382,7 +492,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!****************************!*\
   !*** ./src/react/index.js ***!
   \****************************/
-/*! exports provided: render, default */
+/*! exports provided: render, Component, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -390,6 +500,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CreateElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateElement */ "./src/react/CreateElement/index.js");
 /* harmony import */ var _reconciliation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reconciliation */ "./src/react/reconciliation/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _reconciliation__WEBPACK_IMPORTED_MODULE_1__["render"]; });
+
+/* harmony import */ var _Component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Component */ "./src/react/Component/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return _Component__WEBPACK_IMPORTED_MODULE_2__["Component"]; });
+
 
 
 
@@ -419,10 +533,20 @@ var subTask = null; // 等待提交
 var pendingCommit = null; // fiber就是最终的
 
 var commitAllWork = function commitAllWork(fiber) {
-  console.log(fiber);
+  // console.log(fiber)
   fiber.effects.forEach(function (item) {
     if (item.effectTag === 'placement') {
-      item.parent.stateNode.appendChild(item.stateNode);
+      var _fiber = item;
+      var parentFiber = item.parent; // 如果是类组件 就把 parentFiber 赋值为 parentFiber.parent
+
+      while (parentFiber.tag === 'class_component') {
+        parentFiber = parentFiber.parent;
+      } // 最终要进行普通节点渲染
+
+
+      if (_fiber.tag === 'host_component') {
+        parentFiber.stateNode.appendChild(_fiber.stateNode);
+      }
     }
   });
 }; // 构建根节点的Fiber对象
@@ -466,7 +590,8 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
       effectTag: 'placement',
       parent: fiber
     };
-    newFiber.stateNode = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["createStateNode"])(newFiber); // fiber遍历的规则 如果是第一个节点 就是子节点 不是第一个子节点就是下一个兄弟节点
+    newFiber.stateNode = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["createStateNode"])(newFiber);
+    console.log(newFiber); // fiber遍历的规则 如果是第一个节点 就是子节点 不是第一个子节点就是下一个兄弟节点
 
     if (index === 0) {
       fiber.child = newFiber;
@@ -484,7 +609,13 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
 
 var executeTask = function executeTask(fiber) {
   // 第一个参数为根节点的fiber 第二个参数为子节点的virtualDOM对象
-  reconcileChildren(fiber, fiber.props.children); // console.log('构建子节点后fiber---', fiber)
+  if (fiber.tag === 'class_component') {
+    // 如果是类组件 fiber.stateNode.render() 返回子元素
+    reconcileChildren(fiber, fiber.stateNode.render());
+  } else {
+    reconcileChildren(fiber, fiber.props.children);
+  } // console.log('构建子节点后fiber---', fiber)
+
 
   if (fiber.child) {
     return fiber.child;

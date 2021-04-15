@@ -11,10 +11,20 @@ let pendingCommit = null
 
 // fiber就是最终的
 const commitAllWork = fiber => {
-  console.log(fiber)
+  // console.log(fiber)
   fiber.effects.forEach(item => {
     if (item.effectTag === 'placement') {
-      item.parent.stateNode.appendChild(item.stateNode)
+      let fiber = item
+      let parentFiber = item.parent
+
+      // 如果是类组件 就把 parentFiber 赋值为 parentFiber.parent
+      while (parentFiber.tag === 'class_component') {
+        parentFiber = parentFiber.parent
+      }
+      // 最终要进行普通节点渲染
+      if (fiber.tag === 'host_component') {
+        parentFiber.stateNode.appendChild(fiber.stateNode)
+      }
     }
   })
 }
@@ -59,6 +69,8 @@ const reconcileChildren = (fiber, children) => {
 
     newFiber.stateNode = createStateNode(newFiber)
 
+    console.log(newFiber)
+
     // fiber遍历的规则 如果是第一个节点 就是子节点 不是第一个子节点就是下一个兄弟节点
     if (index === 0) {
       fiber.child = newFiber
@@ -77,7 +89,14 @@ const reconcileChildren = (fiber, children) => {
 // 构建fiber
 const executeTask = fiber => {
   // 第一个参数为根节点的fiber 第二个参数为子节点的virtualDOM对象
-  reconcileChildren(fiber, fiber.props.children)
+
+  if (fiber.tag === 'class_component') {
+    // 如果是类组件 fiber.stateNode.render() 返回子元素
+    reconcileChildren(fiber, fiber.stateNode.render())
+  } else {
+    reconcileChildren(fiber, fiber.props.children)
+  }
+
   // console.log('构建子节点后fiber---', fiber)
   if (fiber.child) {
     return fiber.child
