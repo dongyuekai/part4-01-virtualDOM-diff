@@ -10,7 +10,8 @@ let subTask = null
 // 等待提交
 let pendingCommit = null
 
-// fiber就是最终的
+// 参数fiber就是最终的
+// commitAllWork实现dom操作
 const commitAllWork = fiber => {
   // console.log(fiber)
   fiber.effects.forEach(item => {
@@ -200,6 +201,8 @@ const workLoop = deadline => {
     commitAllWork(pendingCommit)
   }
 }
+
+// requestIdleCallback API操作 空闲执行操作
 const performTask = deadline => {
 
   // 执行任务

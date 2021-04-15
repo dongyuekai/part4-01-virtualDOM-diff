@@ -534,7 +534,8 @@ var taskQueue = Object(_Misc__WEBPACK_IMPORTED_MODULE_1__["createTaskQueue"])();
 
 var subTask = null; // 等待提交
 
-var pendingCommit = null; // fiber就是最终的
+var pendingCommit = null; // 参数fiber就是最终的
+// commitAllWork实现dom操作
 
 var commitAllWork = function commitAllWork(fiber) {
   // console.log(fiber)
@@ -715,7 +716,8 @@ var workLoop = function workLoop(deadline) {
   if (pendingCommit) {
     commitAllWork(pendingCommit);
   }
-};
+}; // requestIdleCallback API操作 空闲执行操作
+
 
 var performTask = function performTask(deadline) {
   // 执行任务
