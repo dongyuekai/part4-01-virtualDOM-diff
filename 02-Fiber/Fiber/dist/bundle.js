@@ -99,7 +99,7 @@ __webpack_require__.r(__webpack_exports__);
 // 利用Fiber算法实现将jsx对象 转换成真实dom 显示在页面中
 
 var root = document.getElementById("root");
-var jsx = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello React"));
+var jsx = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello React"), /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hi React"));
 Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])(jsx, root);
 
 /***/ }),
@@ -465,6 +465,7 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
     index++;
   }
 }; // fiber参数就是根节点fiber对象
+// 构建fiber
 
 
 var executeTask = function executeTask(fiber) {
@@ -473,6 +474,16 @@ var executeTask = function executeTask(fiber) {
 
   if (fiber.child) {
     return fiber.child;
+  }
+
+  var currentExecutelyFiber = fiber;
+
+  while (currentExecutelyFiber.parent) {
+    if (currentExecutelyFiber.sibling) {
+      return currentExecutelyFiber.sibling;
+    }
+
+    currentExecutelyFiber = currentExecutelyFiber.parent;
   }
 
   console.log(fiber);

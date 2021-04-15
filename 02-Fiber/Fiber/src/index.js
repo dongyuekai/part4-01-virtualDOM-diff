@@ -4,6 +4,7 @@ const root = document.getElementById("root")
 const jsx = (
   <div>
     <p>Hello React</p>
+    <p>Hi React</p>
   </div>
 )
 render(jsx, root)

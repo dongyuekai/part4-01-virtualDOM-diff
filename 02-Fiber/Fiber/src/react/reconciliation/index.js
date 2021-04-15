@@ -59,6 +59,7 @@ const reconcileChildren = (fiber, children) => {
 
 }
 // fiber参数就是根节点fiber对象
+// 构建fiber
 const executeTask = fiber => {
   // 第一个参数为根节点的fiber 第二个参数为子节点的virtualDOM对象
   reconcileChildren(fiber, fiber.props.children)
@@ -66,6 +67,15 @@ const executeTask = fiber => {
   if (fiber.child) {
     return fiber.child
   }
+
+  let currentExecutelyFiber = fiber
+  while (currentExecutelyFiber.parent) {
+    if (currentExecutelyFiber.sibling) {
+      return currentExecutelyFiber.sibling
+    }
+    currentExecutelyFiber = currentExecutelyFiber.parent
+  }
+
   console.log(fiber)
 }
 
