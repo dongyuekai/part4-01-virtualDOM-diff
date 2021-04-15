@@ -1,8 +1,23 @@
 import { createTaskQueue, arrified, createStateNode, getTag } from '../Misc'
 
+// 任务队列
 const taskQueue = createTaskQueue()
+
+// 要执行的子任务
 let subTask = null
 
+// 等待提交
+let pendingCommit = null
+
+// fiber就是最终的
+const commitAllWork = fiber => {
+  console.log(fiber)
+  fiber.effects.forEach(item => {
+    if (item.effectTag === 'placement') {
+      item.parent.stateNode.appendChild(item.stateNode)
+    }
+  })
+}
 // 构建根节点的Fiber对象
 const getFirstTask = () => {
   // 从任务队列中获取第一个子任务
@@ -72,6 +87,7 @@ const executeTask = fiber => {
 
   while (currentExecutelyFiber.parent) {
 
+    // 将构建好的所有fiber在每一级别effects数组收集 最终合并到最顶层的fiber对象的effects数组中
     currentExecutelyFiber.parent.effects = currentExecutelyFiber.parent.effects.concat(
       currentExecutelyFiber.effects.concat([currentExecutelyFiber])
     )
@@ -82,7 +98,7 @@ const executeTask = fiber => {
     currentExecutelyFiber = currentExecutelyFiber.parent
   }
 
-  console.log(fiber)
+  pendingCommit = currentExecutelyFiber
 }
 
 const workLoop = deadline => {
@@ -97,6 +113,9 @@ const workLoop = deadline => {
   while (subTask && deadline.timeRemaining() > 1) {
     // 如果任务存在 并且浏览器空闲
     subTask = executeTask(subTask)
+  }
+  if (pendingCommit) {
+    commitAllWork(pendingCommit)
   }
 }
 const performTask = deadline => {

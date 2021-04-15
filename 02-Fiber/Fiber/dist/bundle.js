@@ -410,9 +410,23 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
 /* harmony import */ var _Misc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Misc */ "./src/react/Misc/index.js");
+ // 任务队列
 
-var taskQueue = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["createTaskQueue"])();
-var subTask = null; // 构建根节点的Fiber对象
+var taskQueue = Object(_Misc__WEBPACK_IMPORTED_MODULE_0__["createTaskQueue"])(); // 要执行的子任务
+
+var subTask = null; // 等待提交
+
+var pendingCommit = null; // fiber就是最终的
+
+var commitAllWork = function commitAllWork(fiber) {
+  console.log(fiber);
+  fiber.effects.forEach(function (item) {
+    if (item.effectTag === 'placement') {
+      item.parent.stateNode.appendChild(item.stateNode);
+    }
+  });
+}; // 构建根节点的Fiber对象
+
 
 var getFirstTask = function getFirstTask() {
   // 从任务队列中获取第一个子任务
@@ -479,6 +493,7 @@ var executeTask = function executeTask(fiber) {
   var currentExecutelyFiber = fiber;
 
   while (currentExecutelyFiber.parent) {
+    // 将构建好的所有fiber在每一级别effects数组收集 最终合并到最顶层的fiber对象的effects数组中
     currentExecutelyFiber.parent.effects = currentExecutelyFiber.parent.effects.concat(currentExecutelyFiber.effects.concat([currentExecutelyFiber]));
 
     if (currentExecutelyFiber.sibling) {
@@ -488,7 +503,7 @@ var executeTask = function executeTask(fiber) {
     currentExecutelyFiber = currentExecutelyFiber.parent;
   }
 
-  console.log(fiber);
+  pendingCommit = currentExecutelyFiber;
 };
 
 var workLoop = function workLoop(deadline) {
@@ -502,6 +517,10 @@ var workLoop = function workLoop(deadline) {
   while (subTask && deadline.timeRemaining() > 1) {
     // 如果任务存在 并且浏览器空闲
     subTask = executeTask(subTask);
+  }
+
+  if (pendingCommit) {
+    commitAllWork(pendingCommit);
   }
 };
 
