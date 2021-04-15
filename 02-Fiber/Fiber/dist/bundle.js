@@ -136,7 +136,7 @@ var root = document.getElementById("root"); // jsx对象
 var jsx = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hello React"), /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hi Fiber"));
 Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])(jsx, root);
 setTimeout(function () {
-  var jsx = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, "Hello React -- \u5965\u5229\u7ED9"), /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hi Fiber"));
+  var jsx = /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("div", null, /*#__PURE__*/_react__WEBPACK_IMPORTED_MODULE_0__["default"].createElement("p", null, "Hi Fiber"));
   Object(_react__WEBPACK_IMPORTED_MODULE_0__["render"])(jsx, root);
 }, 2000);
 
@@ -564,6 +564,11 @@ var commitAllWork = function commitAllWork(fiber) {
         // 节点类型不同 直接替换
         item.parent.stateNode.replaceChild(item.stateNode, item.alternate.stateNode);
       }
+    } // 删除操作
+
+
+    if (item.effectTag === 'delete') {
+      item.parent.stateNode.removeChild(item.stateNode);
     }
   }); // 备份旧的fiber节点对象
 
@@ -605,11 +610,15 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
     alternate = fiber.alternate.child;
   }
 
-  while (index < numberOfElements) {
+  while (index < numberOfElements || alternate) {
     // 子级 virtualDOM 对象
     element = arrifiedChildren[index];
 
-    if (element && alternate) {
+    if (!element && alternate) {
+      // 如果element不存在 并且alternate备份节点存在 则执行删除操作
+      alternate.effectTag = 'delete';
+      fiber.effects.push(alternate);
+    } else if (element && alternate) {
       // 更新操作
       newFiber = {
         type: element.type,
@@ -650,7 +659,7 @@ var reconcileChildren = function reconcileChildren(fiber, children) {
 
     if (index === 0) {
       fiber.child = newFiber;
-    } else {
+    } else if (element) {
       prevFiber.sibling = newFiber;
     }
 

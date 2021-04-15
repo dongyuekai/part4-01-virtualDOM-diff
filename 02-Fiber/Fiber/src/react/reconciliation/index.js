@@ -43,7 +43,10 @@ const commitAllWork = fiber => {
         )
       }
     }
-
+    // 删除操作
+    if (item.effectTag === 'delete') {
+      item.parent.stateNode.removeChild(item.stateNode)
+    }
   })
   // 备份旧的fiber节点对象
   fiber.stateNode.__rootFiberContainer = fiber
@@ -85,11 +88,15 @@ const reconcileChildren = (fiber, children) => {
     alternate = fiber.alternate.child
   }
 
-  while (index < numberOfElements) {
+  while (index < numberOfElements || alternate) {
     // 子级 virtualDOM 对象
     element = arrifiedChildren[index]
 
-    if (element && alternate) {
+    if (!element && alternate) {
+      // 如果element不存在 并且alternate备份节点存在 则执行删除操作
+      alternate.effectTag = 'delete'
+      fiber.effects.push(alternate)
+    } else if (element && alternate) {
       // 更新操作
       newFiber = {
         type: element.type,
@@ -130,7 +137,7 @@ const reconcileChildren = (fiber, children) => {
     // fiber遍历的规则 如果是第一个节点 就是子节点 不是第一个子节点就是下一个兄弟节点
     if (index === 0) {
       fiber.child = newFiber
-    } else {
+    } else if (element) {
       prevFiber.sibling = newFiber
     }
 
