@@ -9,6 +9,25 @@ export default function updateNodeElement(
   // 获取节点对应的属性对象
   const newProps = virtualDOM.props
   const oldProps = oldVirtualDOM.props || {}
+
+  if (virtualDOM.type === 'text') {
+    if (newProps.textContent !== oldProps.textContent) {
+      if (virtualDOM.parent.type !== oldVirtualDOM.parent.type) {
+        // 如果父级节点类型不同
+        virtualDOM.parent.stateNode.appendChild(
+          document.createTextNode(newProps.textContent),
+        )
+      } else {
+        // 如果父级节点类型相同
+        virtualDOM.parent.stateNode.replaceChild(
+          document.createTextNode(newProps.textContent),
+          oldVirtualDOM.stateNode
+        )
+      }
+    }
+    return
+  }
+
   // 属性设置或更新操作
   Object.keys(newProps).forEach(propName => {
     // 获取属性值

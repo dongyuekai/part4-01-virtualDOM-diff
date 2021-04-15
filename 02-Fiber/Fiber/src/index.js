@@ -29,12 +29,30 @@ const root = document.getElementById("root")
 // render(<Greating name='dyk'/>, root)
 
 // 函数组件
-function FnComponent(props) {
-  return (
+// function FnComponent(props) {
+//   return (
+//     <div>
+//       {props.title}
+//       FnComponent
+//     </div>
+//   )
+// }
+// render(<FnComponent title="hello" />, root)
+
+// 实现更新节点
+const jsx = (
+  <div>
+    <p>Hello React</p>
+    <p>Hi Fiber</p>
+  </div>
+)
+render(jsx, root)
+setTimeout(() => {
+  const jsx = (
     <div>
-      {props.title}
-      FnComponent
+      <div>Hello React -- 奥利给</div>
+      <p>Hi Fiber</p>
     </div>
   )
-}
-render(<FnComponent title="hello" />, root)
+  render(jsx, root)
+}, 2000);
